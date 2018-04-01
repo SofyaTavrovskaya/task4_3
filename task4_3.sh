@@ -32,7 +32,7 @@ echo $BACKUPS_COUNT
 echo $(($BACKUPS_COUNT-$2))
 #archive it and save to dir
 #delete the oldest backup if limit overflow
-if (($BACKUPS_COUNT-$2) > 0)); then
+if (($BACKUPS_COUNT-$2 > 0)); then
 { ls -t "$BACKUP_DIR"/"$BACKUP_FILENAME"-*.tar.gz |tail -n $(($BACKUPS_COUNT-$2))  | xargs -d '\n' -r rm; } || { echo "Old backups delete error" >&2 ; exit 6; }
 else
 echo "Don't need to delete old backups"
