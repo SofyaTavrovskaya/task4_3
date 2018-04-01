@@ -29,6 +29,12 @@ echo $BACKUP_FILENAME
 tar czf "$BACKUP_DIR"/"$BACKUP_FILENAME"-"$DATE".tar.gz "$1" 2> /dev/null || { echo "Tar error" >&2 ; exit 5; }
 BACKUPS_COUNT=$(ls "$BACKUP_DIR"/"$BACKUP_FILENAME"-*.tar.gz | wc -l)
 echo $BACKUPS_COUNT
-{ ls -t "$BACKUP_DIR"/"$BACKUP_FILENAME"-*.tar.gz |tail -n $(($BACKUPS_COUNT-$2))  | xargs -d '\n' -r rm; } || { echo "Old backups delete error" >&2 ; exit 6; }
-#archive it and save to dir https://stackoverflow.com/questions/12187859/create-new-file-but-add-number-if-filename-already-exists-in-bash
+echo $(($BACKUPS_COUNT-$2))
+#archive it and save to dir
 #delete the oldest backup if limit overflow
+if (($BACKUPS_COUNT-$2) > 0)); then
+{ ls -t "$BACKUP_DIR"/"$BACKUP_FILENAME"-*.tar.gz |tail -n $(($BACKUPS_COUNT-$2))  | xargs -d '\n' -r rm; } || { echo "Old backups delete error" >&2 ; exit 6; }
+else
+echo "Don't need to delete old backups"
+fi
+
